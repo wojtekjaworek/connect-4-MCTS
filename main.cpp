@@ -22,7 +22,7 @@ int main() {
 
 	Env env(r1, r2, b);
 
-	MCTS mcts(env, 1, 10);
+	MCTS mcts(b, 7);
 	mcts.search();
 
 

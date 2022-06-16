@@ -12,6 +12,20 @@ Board::Board(int who_to_play) {
 	this->initBoard();
 }
 
+Board::Board(const Board& b) {
+	
+	this->initBoard();
+
+	for (int i = 0;i < ROWS;i++) {
+		for (int j = 0;j < COLS;j++) {
+			this->board[i][j] = b.board[i][j];
+		}
+	}
+
+	this->_who_to_play = b._who_to_play;
+
+}
+
 
 vector<int> Board::generate_legal_moves() {
 

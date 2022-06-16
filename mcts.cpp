@@ -1,26 +1,41 @@
 #include "mcts.h"
 
-MCTSNode::MCTSNode(Env& env) {
-	this->env = &env;
+MCTSNode::MCTSNode(Board& board) {
+	this->board = &board;
 	this->parent = nullptr;
 	this->parent_action = NULL;
-	this->player_to_move = this->env->accessBoard().who_to_play();
-	this->untried_actions = this->env->accessBoard().generate_legal_moves();
+	this->player_to_move = this->board->who_to_play();
+	this->untried_actions = this->board->generate_legal_moves();
 	this->_is_fully_expanded = this->check_if_fully_expanded();
 	this->_is_terminal_state = this->check_if_terminal_state();
 
 }
 
-MCTSNode::MCTSNode(Env& env, MCTSNode& parent, int parent_action) {
-	this->env = &env;
+MCTSNode::MCTSNode(Board& board, MCTSNode& parent, int parent_action) {
+	this->board = &board;
 	this->parent = &parent;
 	this->parent_action = parent_action;
-	this->player_to_move = this->env->accessBoard().who_to_play();
-	this->untried_actions = this->env->accessBoard().generate_legal_moves();
+	this->player_to_move = this->board->who_to_play();
+	this->untried_actions = this->board->generate_legal_moves();
 	this->_is_fully_expanded = this->check_if_fully_expanded();
 	this->_is_terminal_state = this->check_if_terminal_state();
 
 
+}
+
+MCTSNode::MCTSNode(const MCTSNode& n) { // deepcopy n
+	this->board = n.board;
+	this->parent = n.parent;
+	this->parent_action = n.parent_action;
+	this->player_to_move = this->board->who_to_play();
+	this->untried_actions = this->board->generate_legal_moves();
+	this->_is_fully_expanded = this->check_if_fully_expanded();
+	this->_is_terminal_state = this->check_if_terminal_state();
+	this->visits = n.visits;
+	this->score = score;
+	this->ucb1 = n.ucb1;
+	this->untried_actions = n.untried_actions;
+	this->children = n.children;
 }
 
 bool MCTSNode::check_if_fully_expanded() {
@@ -28,19 +43,19 @@ bool MCTSNode::check_if_fully_expanded() {
 }
 
 bool MCTSNode::check_if_terminal_state() {
-	return this->env->accessBoard().is_terminal_state();
+	return this->board->is_terminal_state();
 }
 
 void MCTSNode::print() {
 	cout << endl;
 	cout << "               Node: " << &*this << endl;
-	cout << "                Env: " << env << endl;
-	cout << "          Env board: " << endl;
-	this->env->accessBoard().print();
+	cout << "              Board: " << board << endl;
+	cout << "        Board state: " << endl;
+	this->board->print();
 	cout << "     Player to move: " << this->player_to_move << endl;
 	cout << "             Parent: " << this->parent << endl;
 	cout << "      Parent action: " << this->parent_action << endl;
-	cout << "    Untried actions: " << &this->untried_actions << endl;
+	cout << "    Untried actions: " << this->untried_actions.size() << endl;
 	cout << "Is fully expanded? : " << this->_is_fully_expanded << endl;
 	cout << " Is teminal state? : " << this->_is_terminal_state << endl;
 	cout << "             visits: " << this->visits << endl;
@@ -53,18 +68,20 @@ void MCTSNode::print() {
 	from now on defs for MCTS class (not MCTSNode)
 */
 
-MCTS::MCTS(Env env, int player_to_move, int depth) {
-	this->env = env;
+MCTS::MCTS(Board board, int depth) {
+	this->board = board;
 	this->depth = depth;
-	this->player_to_move = player_to_move;
+	this->player_to_move = board.who_to_play();
 }
 
 void MCTS::search() {
 
-	MCTSNode root(this->env); // create root without parent nor parent_action
+	MCTSNode root(this->board); // create root without parent nor parent_action
+	root.print();
 	
 	for (int i = 0; i < this->depth; i++) {
 		MCTSNode node = this->selection(root);
+		root.children.back().print();
 	}
 
 
@@ -79,7 +96,7 @@ MCTSNode MCTS::selection(MCTSNode& node) {
 			return this->expansion(node);
 		}
 		else {
-			node = this->ucb1(node);
+			node = this->ucb1(node); // tutaj sie zapetla ale jak napisze kod do ucb to sie 'samo' naprawi
 		}
 	}
 	return node;
@@ -90,13 +107,15 @@ MCTSNode MCTS::selection(MCTSNode& node) {
 
 MCTSNode MCTS::expansion(MCTSNode& node) {
 
-	int action = node.untried_actions.back();
-	Env new_env = node.env;
-	new_env.accessBoard().make_move(action);
-	MCTSNode child_node(new_env, node, action);
-	node.children.push_back(&child_node);
+	int action = node.untried_actions.back(); // get last element
+	node.untried_actions.pop_back(); // remove this element as it is now 'tried' action
+	Board new_board(*node.board);
+	cout << "at new boardd: " << &new_board << endl;
+	new_board.make_move(action);
+	MCTSNode child_node(new_board, node, action);
+	node.children.push_back(child_node);
 	node._is_fully_expanded = node.check_if_fully_expanded();
-	
+
 	return child_node;
 }
 

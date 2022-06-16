@@ -9,6 +9,7 @@ class Board
 public:
 	Board(); // constructor
 	Board(int who_to_play); // constructor
+	Board(const Board& b); // constructor for deepcopy
 	vector<int> generate_legal_moves();
 	void print(); // print current board position
 	void make_move(int move); 

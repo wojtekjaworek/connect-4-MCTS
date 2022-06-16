@@ -13,11 +13,11 @@ class MCTSNode {
 
 public:
 	friend class MCTS;
-	MCTSNode(Env& env); // for init purposes, without epecifying parent 
-	MCTSNode(Env& env, MCTSNode& parent, int parent_action);
+	MCTSNode(Board& board); // for init purposes, without epecifying parent 
+	MCTSNode(Board& board, MCTSNode& parent, int parent_action);
+	MCTSNode(const MCTSNode& n); // deepcopy constructor
 	void print();
 private:
-	Env* env;
 	Board* board; // might not be necessary to use this
 	// here to put parent node
 	MCTSNode* parent = nullptr;
@@ -28,7 +28,7 @@ private:
 	int score = 0;
 	double ucb1 = 0;
 	vector<int> untried_actions; // generate legal moves
-	vector<MCTSNode*> children;
+	vector<MCTSNode> children;
 	bool _is_fully_expanded; // check if current state had developed all possible continuations
 	bool _is_terminal_state;
 
@@ -48,21 +48,21 @@ class MCTS{
 
 public:
 	friend class MCTSNode;
-	MCTS(Env env, int player_to_move, int depth);
+	MCTS(Board board, int depth);
 	void search();
 
 
 
 private:
 	int player_to_move = 1;
-	Env env;
+	Board board;
 	int depth = 100;
 
 	MCTSNode selection(MCTSNode& node);
 	MCTSNode expansion(MCTSNode& node);
 	void rollout();
 	void backpropagate();
-	MCTSNode ucb1(MCTSNode node);
+	MCTSNode ucb1(MCTSNode& node);
 
 
 
