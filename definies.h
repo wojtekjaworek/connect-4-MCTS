@@ -7,6 +7,7 @@
 #include <random>
 #include <utility>
 #include <ctime>
+#include <Windows.h>
 
 using namespace std;
 

@@ -1,5 +1,4 @@
 #include "board.h"
-#include "definies.h"
 
 Board::Board() {
 

@@ -15,7 +15,7 @@ public:
 	void make_move(int move); 
 	bool is_move_legal(int move);
 	int who_to_play();
-	int outcome(); // return 1 means first player won, -1 - opposite player won, 0 means not terminal state, 2 means draw
+	int outcome(); // return 1 means first player won, -1 - opposite player won, 2 means not terminal state, 0 means draw
 	bool is_fully_expanded();
 	bool is_terminal_state();
 	void reset();

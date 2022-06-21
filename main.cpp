@@ -14,16 +14,16 @@ int main() {
 	Random r2;
 	Human h1;
 	Human h2;
+	MCTSAgent mcts_agent_1(1000); // pass depth of evaluation
+
 
 	float score = 0, tmp;
-	int iter = 100;
+	int iter = 1000;
 
-	
 
-	Env env(r1, r2, b);
+	bool display = false;
+	Env env(mcts_agent_1, r2, b, display); // match between mcts depth 100 and random
 
-	MCTS mcts(b, 7);
-	mcts.search();
 
 
 
@@ -32,7 +32,7 @@ int main() {
 		tmp = env.play();
 		score += tmp;
 		env.resetBoard();
-		
+		cout << i << endl;
 	}
 
 	cout << "avg score: " << score / iter << endl;

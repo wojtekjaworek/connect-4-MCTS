@@ -1,20 +1,22 @@
 #include "env.h"
-#include "definies.h"
 
 Env::Env() {
 }
 
-Env::Env(Agent& agent1, Agent& agent2) {
+Env::Env(Agent& agent1, Agent& agent2, bool display) {
 	this->agent1 = &agent1;
 	this->agent2 = &agent2;
 	this->board = new Board;
+	this->diplay = display;
 }
 
-Env::Env(Agent& agent1, Agent& agent2, Board& board) {
+Env::Env(Agent& agent1, Agent& agent2, Board& board, bool display) {
 
 	this->agent1 = &agent1;
 	this->agent2 = &agent2;
 	this->board = &board;
+	this->diplay = display;
+
 
 
 
@@ -31,9 +33,9 @@ int Env::play() {
 
 		if (this->board->who_to_play() == 1) {
 
-			int a1 = this->agent1->pick_move();
+			int a1 = this->agent1->pick_move(this->board);
 			while (!this->board->is_move_legal(a1)) { // only legal move
-				a1 = this->agent1->pick_move();
+				a1 = this->agent1->pick_move(this->board);
 			}
 			this->board->make_move(a1);
 
@@ -48,9 +50,9 @@ int Env::play() {
 
 		else if (this->board->who_to_play() == -1) {
 			
-			int a2 = this->agent2->pick_move();
+			int a2 = this->agent2->pick_move(this->board);
 			while (!this->board->is_move_legal(a2)) { // only legal move
-				a2 = this->agent2->pick_move();
+				a2 = this->agent2->pick_move(this->board);
 			}
 			this->board->make_move(a2);
 
