@@ -94,11 +94,24 @@ void MCTSNode::print() {
 	from now on defs for MCTS class (not MCTSNode)
 */
 
-MCTS::MCTS() {
+MCTS::MCTS(double c_param) {
+	this->c_param = c_param;
 	
 }
 
 int MCTS::search(Board board, int depth) {
+	this->_how_deep = 0;
+	this->all_nodes.clear();
+
+
+	if (board.who_to_play() == -1) {
+		// multiply board by -1 and change who to play to opposite
+		// due to algorithm we cannot just pick move with lowest score for -1 player
+		board.flip();
+		this->board = board;
+		this->depth = depth;
+		this->player_to_move = board.who_to_play();
+	}
 
 	this->board = board;
 	this->depth = depth;
@@ -120,21 +133,21 @@ int MCTS::search(Board board, int depth) {
 	this->print_tree(root, 1);
 	*/
 
-
 	//printing root children with  info
-	/*
+	
 	int aa = 0;
 	for (auto& child : root->children) {
 		cout << " Child: " << aa;
 		cout << " Parent action: " << child->parent_action;
 		cout << " visits: " << child->visits;
 		cout << " score: " << child->score << endl;
-	
+
 		aa++;
 	}
-	*/
+	_getch();
 
 	return this->most_scoring_node(root)->parent_action;
+	//return this->most_visited_node(root)->parent_action;
 }
 
 
@@ -216,6 +229,7 @@ MCTSNode* MCTS::most_scoring_node(MCTSNode* node) {
 
 
 MCTSNode* MCTS::selection(MCTSNode* node) {
+	this->_how_deep = 1;
 
 	while (node->_is_terminal_state == false) {
 		if (node->_is_fully_expanded == false) {
@@ -223,9 +237,10 @@ MCTSNode* MCTS::selection(MCTSNode* node) {
 		}
 		else {
 			node = this->ucb1(node);
+			this->_how_deep++;
 		}
 	}
-
+	this->_how_deep++; // once more because we just selected another node, counting root as deep=0;
 	return node;
 }
 
@@ -278,8 +293,8 @@ MCTSNode* MCTS::ucb1(MCTSNode* node) {
 
 	vector<MCTSNode*> best_moves; 
 	best_moves.clear();
-	double best_score = 0;
-	double c_param = 1.2;
+	double best_score = -999999;
+	double c_param = this->c_param;
 	double move_score;
 
 	for (auto& child : node->children) {
@@ -295,8 +310,14 @@ MCTSNode* MCTS::ucb1(MCTSNode* node) {
 		}
 
 	}
-
-	int random_index = rand() % best_moves.size();
+	int random_index;
+	if (best_moves.size() != 0) {
+		random_index = rand() % best_moves.size();
+	}
+	else {
+		random_index = 0;
+		cout << "else" << endl;
+	}
 
 	return best_moves[random_index];
 }

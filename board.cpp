@@ -151,9 +151,9 @@ int Board::outcome() {
 
 	//ukosne minus
 
-	for (int i = 0; i < ROWS - 3; i++) {
-		for (int j = COLS;j >= 3; j--) {
-			temp = this->board[i][j] + this->board[i + 1][j - 1] + this->board[i + 2][j - 2] + this->board[i + 3][j - 3];
+	for (int i = 3; i < ROWS; i++) {
+		for (int j = 0; j < COLS - 3; j++) {
+			temp = this->board[i][j] + this->board[i - 1][j + 1] + this->board[i - 2][j + 2] + this->board[i - 3][j + 3];
 			if (temp == 4) {
 				return 1;
 			}
@@ -195,6 +195,15 @@ bool Board::is_terminal_state() {
 void Board::reset() {
 	this->initBoard(); // reset to all-zeros
 	this->_who_to_play = 1;
+}
+
+void Board::flip() {
+	for (int i = 0;i < ROWS;i++) {
+		for (int j = 0;j < COLS;j++) {
+			this->board[i][j] = -1 * this->board[i][j];
+		}
+	}
+	this->_who_to_play = -1 * this->_who_to_play;
 }
 
 void Board::initBoard() {

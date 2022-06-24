@@ -40,7 +40,7 @@ private:
 
 class MCTSAgent : public Agent {
 public:
-	MCTSAgent(int depth); // maybe replace depth with time for single move?
+	MCTSAgent(int depth, double c_param); // maybe replace depth with time for single move?
 	int pick_move(Board* b);
 
 private:

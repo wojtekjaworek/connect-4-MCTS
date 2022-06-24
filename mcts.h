@@ -48,7 +48,7 @@ class MCTS{
 
 public:
 	friend class MCTSNode;
-	MCTS();
+	MCTS(double c_param); // c_param to adjust ucb1 algorithm 
 	int search(Board board, int depth); // return best move in current position according to MCTS evaluation in given depth
 
 
@@ -58,6 +58,9 @@ private:
 	int player_to_move = 1;
 	Board board;
 	int depth = 100;
+	int _how_deep = 1; // how deep did the tree went
+	double c_param = 1;
+
 	vector<MCTSNode*> all_nodes;
 
 	MCTSNode* selection(MCTSNode* node);

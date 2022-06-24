@@ -4,3 +4,4 @@
 *.filters
 .vs/
 Debug/
+x64/

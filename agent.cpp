@@ -31,8 +31,8 @@ int Human::pick_move(Board* b) {
 }
 
 
-MCTSAgent::MCTSAgent(int depth) {
-	this->mcts = new MCTS();
+MCTSAgent::MCTSAgent(int depth, double c_param) {
+	this->mcts = new MCTS(c_param);
 	this->depth = depth;
 }
 

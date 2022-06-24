@@ -14,15 +14,16 @@ int main() {
 	Random r2;
 	Human h1;
 	Human h2;
-	MCTSAgent mcts_agent_1(1000); // pass depth of evaluation
+	MCTSAgent mcts_agent_1(1000, 50); // pass depth of evaluation and c_param in ucb1
+	
 
 
 	float score = 0, tmp;
-	int iter = 1000;
+	int iter = 100;
 
 
-	bool display = false;
-	Env env(mcts_agent_1, r2, b, display); // match between mcts depth 100 and random
+	bool display = true;
+	Env env(h1, mcts_agent_1, b, display);
 
 
 

@@ -19,6 +19,7 @@ public:
 	bool is_fully_expanded();
 	bool is_terminal_state();
 	void reset();
+	void flip();
 	
 
 private:
