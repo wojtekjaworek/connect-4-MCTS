@@ -24,7 +24,7 @@ Human::Human() {
 int Human::pick_move(Board* b) {
 
 	int move = -1;
-	cout << "Enter your move: (counting from 0) " << endl;
+	cout << "Enter your move: (counting from 0 to 6) " << endl;
 	cin >> move;
 
 	return move;

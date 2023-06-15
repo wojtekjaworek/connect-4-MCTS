@@ -4,10 +4,6 @@
 
 
 class MCTSNode { 
-	/*
-	MCTS graph node has properties:
-		- 
-	*/
 
 public:
 	friend class MCTS;
@@ -19,7 +15,7 @@ public:
 
 private:
 	Board board; // might not be necessary to use this
-	// here to put parent node
+	
 	MCTSNode* parent = nullptr;
 	int action;
 	int parent_action;
@@ -41,10 +37,7 @@ private:
 
 
 class MCTS{
-	/*
-	given root calculate mcts method for given board state
-
-	*/
+	
 
 public:
 	friend class MCTSNode;
@@ -58,7 +51,7 @@ private:
 	int player_to_move = 1;
 	Board board;
 	int depth = 100;
-	int _how_deep = 1; // how deep did the tree went
+	int _how_deep = 1; // how deep did the tree grow
 	double c_param = 1;
 
 	vector<MCTSNode*> all_nodes;

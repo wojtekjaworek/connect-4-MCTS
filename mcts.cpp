@@ -23,7 +23,7 @@ MCTSNode::MCTSNode(Board board, MCTSNode* parent, int parent_action) {
 
 }
 
-MCTSNode::MCTSNode(const MCTSNode& n) { // deepcopy n
+MCTSNode::MCTSNode(const MCTSNode& n) { // deepcopy 
 	this->board = n.board;
 	this->parent = n.parent;
 	this->parent_action = n.parent_action;
@@ -78,8 +78,8 @@ void MCTSNode::print() {
 	cout << "             Parent: " << this->parent << endl;
 	cout << "      Parent action: " << this->parent_action << endl;
 	cout << "    Untried actions: " << this->untried_actions.size() << endl;
-	cout << "Is fully expanded? : " << this->_is_fully_expanded << endl;
-	cout << " Is teminal state? : " << this->_is_terminal_state << endl;
+	cout << " Is fully expanded?: " << this->_is_fully_expanded << endl;
+	cout << "  Is teminal state?: " << this->_is_terminal_state << endl;
 	cout << "             visits: " << this->visits << endl;
 	cout << "              score: " << this->score << endl;
 	cout << endl;
@@ -91,7 +91,7 @@ void MCTSNode::print() {
 
 /*
 
-	from now on defs for MCTS class (not MCTSNode)
+	defs for MCTS class 
 */
 
 MCTS::MCTS(double c_param) {
@@ -135,17 +135,21 @@ int MCTS::search(Board board, int depth) {
 
 	//printing root children with  info
 	
-	int aa = 0;
-	for (auto& child : root->children) {
-		cout << " Child: " << aa;
-		cout << " Parent action: " << child->parent_action;
-		cout << " visits: " << child->visits;
-		cout << " score: " << child->score << endl;
 
-		aa++;
+	if (true) { // change in order to see search info
+		int aa = 0;
+		for (auto& child : root->children) {
+			cout << " Child: " << aa;
+			cout << " Parent action: " << child->parent_action;
+			cout << " visits: " << child->visits;
+			cout << " score: " << child->score << endl;
+
+			aa++;
+		}
+		_getch();
 	}
-	_getch();
-
+	
+	
 	return this->most_scoring_node(root)->parent_action;
 	//return this->most_visited_node(root)->parent_action;
 }
@@ -261,8 +265,12 @@ MCTSNode* MCTS::expansion(MCTSNode* node) {
 	return child_node;
 }
 
-int MCTS::rollout(MCTSNode* node) {
-
+int MCTS::rollout(MCTSNode* node) { 
+	/*
+	TODO: implement counting how many moves before outcome and return multiplied value
+	that will favour moves that win quickly, but also avoid losing quickly
+	*/
+	int moves_count = 0;
 	Board rollout_board(node->board);
 	while (!rollout_board.is_terminal_state()) {
 		vector<int> untried = rollout_board.generate_legal_moves();
@@ -272,9 +280,10 @@ int MCTS::rollout(MCTSNode* node) {
 		int action = untried[random_index];
 		untried.erase(untried.begin() + random_index);
 		rollout_board.make_move(action);
+		moves_count++;
 		untried.clear();
 	} 
-	return rollout_board.outcome();
+	return (10 / (1 + moves_count)) * rollout_board.outcome(); // 100/x gives higher\lower values for quick wins/loses
 
 }
 

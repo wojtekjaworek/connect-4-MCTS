@@ -39,14 +39,21 @@ vector<int> Board::generate_legal_moves() {
 }
 
 void Board::print() {
+	cout << " 0  1  2  3  4  5  6" << endl;
+	cout << "____________________" << endl;
 
 	for (int i = 0;i < ROWS;i++) {
 		for (int j = 0;j < COLS;j++) {
-			if (this->board[i][j] == 1 || this->board[i][j] == 0) {
-				cout << " " << this->board[i][j] << " ";
+
+
+			if (this->board[i][j] == 1) {
+				cout << " " << "X" << " ";
 			}
-			else {
-				cout << "" << this->board[i][j] << " ";
+			if (this->board[i][j] ==-1) {
+				cout << " " << "O" << " ";
+			}
+			if (this->board[i][j] == 0) {
+				cout << " " << "." << " ";
 			}
 		}
 
@@ -94,7 +101,7 @@ int Board::outcome() {
 	int temp = 2;
 
 
-	// poziome
+	// horizontal
 	for (int i = 0; i < ROWS;i++) {
 		for (int j = 0;j < COLS-3; j++) {
 			temp = this->board[i][j] + this->board[i][j+1] + this->board[i][j+2] + this->board[i][j+3];
@@ -113,7 +120,7 @@ int Board::outcome() {
 
 
 
-	//pionowe
+	//vertical
 
 	for (int i = 0; i < ROWS-3;i++) {
 		for (int j = 0;j < COLS; j++) {
@@ -131,7 +138,7 @@ int Board::outcome() {
 
 	}
 
-	//ukosne plus
+	//diag plus
 
 	for (int i = 0; i < ROWS - 3;i++) {
 		for (int j = 0;j < COLS - 3; j++) {
@@ -149,7 +156,7 @@ int Board::outcome() {
 
 	}
 
-	//ukosne minus
+	//diag minus
 
 	for (int i = 3; i < ROWS; i++) {
 		for (int j = 0; j < COLS - 3; j++) {

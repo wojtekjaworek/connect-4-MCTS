@@ -7,7 +7,7 @@ Env::Env(Agent& agent1, Agent& agent2, bool display) {
 	this->agent1 = &agent1;
 	this->agent2 = &agent2;
 	this->board = new Board;
-	this->diplay = display;
+	this->display = display;
 }
 
 Env::Env(Agent& agent1, Agent& agent2, Board& board, bool display) {
@@ -15,7 +15,7 @@ Env::Env(Agent& agent1, Agent& agent2, Board& board, bool display) {
 	this->agent1 = &agent1;
 	this->agent2 = &agent2;
 	this->board = &board;
-	this->diplay = display;
+	this->display = display;
 
 
 
@@ -28,6 +28,11 @@ Board Env::accessBoard() {
 
 int Env::play() {
 
+	if (display) {
+		cout << "current state: " << endl;
+		this->board->print();
+	}
+
 	while (this->board->outcome() == 2) {
 		
 
@@ -39,7 +44,8 @@ int Env::play() {
 			}
 			this->board->make_move(a1);
 
-			if (this->diplay == true) {
+			if (display) {
+				//_getch();
 				system("cls");
 				cout << "agent1 move: " << a1 << endl;
 				cout << "current state: " << endl;
@@ -56,7 +62,8 @@ int Env::play() {
 			}
 			this->board->make_move(a2);
 
-			if (this->diplay == true) {
+			if (display) {
+				//_getch();
 				system("cls");
 				cout << "agent2 move: " << a2 << endl;
 				cout << "current state: " << endl;

@@ -15,7 +15,7 @@ public:
 	Board accessBoard();
 	int play(); // returns outcome, 1-first player won, -1 - opposite player, 0 means draw
 	void resetBoard();
-	bool diplay = false;
+	bool display = false;
 
 private:
 
