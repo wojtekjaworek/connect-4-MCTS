@@ -21,7 +21,7 @@ private:
 	int parent_action;
 	int player_to_move; // get from board
 	int visits = 0;
-	int score = 0;
+	double score = 0;
 	double ucb1 = 0;
 	vector<int> untried_actions; // generate legal moves
 	vector<MCTSNode*> children;
@@ -58,7 +58,7 @@ private:
 
 	MCTSNode* selection(MCTSNode* node);
 	MCTSNode* expansion(MCTSNode* node);
-	int rollout(MCTSNode* node);
+	double rollout(MCTSNode* node);
 	void backpropagate(MCTSNode* node, double score);
 	MCTSNode* ucb1(MCTSNode* node);
 	void print_tree(MCTSNode* node, int r);

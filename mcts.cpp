@@ -120,9 +120,11 @@ int MCTS::search(Board board, int depth) {
 	MCTSNode* root = new MCTSNode(this->board);
 	this->all_nodes.push_back(root);
 
+	double score = 0;
+
 	for (int i = 0; i < this->depth; i++) {
 		MCTSNode* node = this->selection(root);
-		int score = this->rollout(node);
+		score = this->rollout(node);
 		this->backpropagate(node, score);
 
 	}
@@ -265,7 +267,7 @@ MCTSNode* MCTS::expansion(MCTSNode* node) {
 	return child_node;
 }
 
-int MCTS::rollout(MCTSNode* node) { 
+double MCTS::rollout(MCTSNode* node) { 
 	/*
 	TODO: implement counting how many moves before outcome and return multiplied value
 	that will favour moves that win quickly, but also avoid losing quickly
@@ -283,7 +285,9 @@ int MCTS::rollout(MCTSNode* node) {
 		moves_count++;
 		untried.clear();
 	} 
-	return (10 / (1 + moves_count)) * rollout_board.outcome(); // 100/x gives higher\lower values for quick wins/loses
+
+
+	return (static_cast<double>(((this->player_to_move == rollout_board.outcome() ? 1.f : 5.f)) * 10.f / (1 + moves_count)) * rollout_board.outcome()); // x^-1 function gives higher\lower values for quick wins/loses
 
 }
 
