@@ -9,6 +9,8 @@
 #include <ctime>
 #include <Windows.h>
 #include <conio.h>
+#include <cstdlib>
+
 
 using namespace std;
 

@@ -14,7 +14,7 @@ int main() {
 	Random r2;
 	Human h1;
 	Human h2;
-	MCTSAgent mcts_agent_1(100000, 50); // pass depth of evaluation and c_param in ucb1
+	MCTSAgent mcts_agent_1(500000, 50); // pass depth of evaluation and c_param in ucb1
 	MCTSAgent mcts_agent_2(10000, 50); // pass depth of evaluation and c_param in ucb1
 
 

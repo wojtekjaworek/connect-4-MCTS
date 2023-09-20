@@ -61,7 +61,6 @@ private:
 	double rollout(MCTSNode* node);
 	void backpropagate(MCTSNode* node, double score);
 	MCTSNode* ucb1(MCTSNode* node);
-	void print_tree(MCTSNode* node, int r);
 	MCTSNode* most_visited_node(MCTSNode* node); // pass parent node as an agrument and it returns child with most visits
 	MCTSNode* most_scoring_node(MCTSNode* node); // pass parent node as an agrument and it returns child with most visits
 

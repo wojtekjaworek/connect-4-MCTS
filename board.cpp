@@ -2,26 +2,26 @@
 
 Board::Board() {
 
-	this->initBoard();
+	initBoard();
 }
 
 Board::Board(int who_to_play) {
 
 	this->_who_to_play = _who_to_play;
-	this->initBoard();
+	initBoard();
 }
 
 Board::Board(const Board& b) {
 	
-	this->initBoard();
+	initBoard();
 
 	for (int i = 0;i < ROWS;i++) {
 		for (int j = 0;j < COLS;j++) {
-			this->board[i][j] = b.board[i][j];
+			board[i][j] = b.board[i][j];
 		}
 	}
 
-	this->_who_to_play = b._who_to_play;
+	_who_to_play = b._who_to_play;
 
 }
 
@@ -31,7 +31,7 @@ vector<int> Board::generate_legal_moves() {
 	vector<int> temp;
 
 	for (int j = 0;j < COLS;j++) {
-		if (this->board[0][j] == 0) {
+		if (board[0][j] == 0) {
 			temp.push_back(j);
 		}
 	}
@@ -46,13 +46,13 @@ void Board::print() {
 		for (int j = 0;j < COLS;j++) {
 
 
-			if (this->board[i][j] == 1) {
+			if (board[i][j] == 1) {
 				cout << " " << "X" << " ";
 			}
-			if (this->board[i][j] ==-1) {
+			if (board[i][j] ==-1) {
 				cout << " " << "O" << " ";
 			}
-			if (this->board[i][j] == 0) {
+			if (board[i][j] == 0) {
 				cout << " " << "." << " ";
 			}
 		}
@@ -66,9 +66,9 @@ void Board::make_move(int move) {
 
 	if (is_move_legal(move)) {
 		for (int i = ROWS - 1; i >= 0; i--) {
-			if (this->board[i][move] == 0) {
-				this->board[i][move] = this->_who_to_play;
-				this->_who_to_play = -this->_who_to_play; // change player to move to opposite
+			if (board[i][move] == 0) {
+				board[i][move] = _who_to_play;
+				_who_to_play = -_who_to_play; // change player to move to opposite
 				return;
 			}
 		}
@@ -84,7 +84,7 @@ bool Board::is_move_legal(int move) {
 		return false;
 	}
 	else {
-		if (this->board[0][move] == 0) {
+		if (board[0][move] == 0) {
 			return true;
 		}
 	}
@@ -92,7 +92,7 @@ bool Board::is_move_legal(int move) {
 }
 
 int Board::who_to_play() {
-	return this->_who_to_play;
+	return _who_to_play;
 }
 
 int Board::outcome() {
@@ -104,7 +104,7 @@ int Board::outcome() {
 	// horizontal
 	for (int i = 0; i < ROWS;i++) {
 		for (int j = 0;j < COLS-3; j++) {
-			temp = this->board[i][j] + this->board[i][j+1] + this->board[i][j+2] + this->board[i][j+3];
+			temp = board[i][j] + board[i][j+1] + board[i][j+2] + board[i][j+3];
 			if (temp == 4) {
 				return 1;
 			}
@@ -124,7 +124,7 @@ int Board::outcome() {
 
 	for (int i = 0; i < ROWS-3;i++) {
 		for (int j = 0;j < COLS; j++) {
-			temp = this->board[i][j] + this->board[i+1][j] + this->board[i+2][j] + this->board[i+3][j];
+			temp = board[i][j] + board[i+1][j] + board[i+2][j] + board[i+3][j];
 			if (temp == 4) {
 				return 1;
 			}
@@ -142,7 +142,7 @@ int Board::outcome() {
 
 	for (int i = 0; i < ROWS - 3;i++) {
 		for (int j = 0;j < COLS - 3; j++) {
-			temp = this->board[i][j] + this->board[i + 1][j + 1] + this->board[i + 2][j + 2] + this->board[i + 3][j + 3];
+			temp = board[i][j] + board[i + 1][j + 1] + board[i + 2][j + 2] + board[i + 3][j + 3];
 			if (temp == 4) {
 				return 1;
 			}
@@ -160,7 +160,7 @@ int Board::outcome() {
 
 	for (int i = 3; i < ROWS; i++) {
 		for (int j = 0; j < COLS - 3; j++) {
-			temp = this->board[i][j] + this->board[i - 1][j + 1] + this->board[i - 2][j + 2] + this->board[i - 3][j + 3];
+			temp = board[i][j] + board[i - 1][j + 1] + board[i - 2][j + 2] + board[i - 3][j + 3];
 			if (temp == 4) {
 				return 1;
 			}
@@ -175,7 +175,7 @@ int Board::outcome() {
 	}
 
 
-	if (this->is_fully_expanded()) {
+	if (is_fully_expanded()) {
 		return 0;
 	}
 
@@ -186,7 +186,7 @@ bool Board::is_fully_expanded() {
 
 	for (int i = 0;i < ROWS;i++) {
 		for (int j = 0;j < COLS;j++) {
-			if (this->board[i][j] == 0) {
+			if (board[i][j] == 0) {
 				return false;
 			}
 		}
@@ -195,29 +195,29 @@ bool Board::is_fully_expanded() {
 }
 
 bool Board::is_terminal_state() {
-	if (this->outcome() == 1 || this->outcome() == -1 || this->outcome() == 0) return true;
+	if (outcome() == 1 || outcome() == -1 || outcome() == 0) return true;
 	else return false;
 }
 
 void Board::reset() {
-	this->initBoard(); // reset to all-zeros
-	this->_who_to_play = 1;
+	initBoard(); // reset to all-zeros
+	_who_to_play = 1;
 }
 
 void Board::flip() {
 	for (int i = 0;i < ROWS;i++) {
 		for (int j = 0;j < COLS;j++) {
-			this->board[i][j] = -1 * this->board[i][j];
+			board[i][j] = -1 * board[i][j];
 		}
 	}
-	this->_who_to_play = -1 * this->_who_to_play;
+	_who_to_play = -1 * _who_to_play;
 }
 
 void Board::initBoard() {
 
 	for (int i = 0;i < ROWS;i++) {
 		for (int j = 0;j < COLS;j++) {
-			this->board[i][j] = 0;
+			board[i][j] = 0;
 		}
 	}
 }

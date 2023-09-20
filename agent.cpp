@@ -32,12 +32,12 @@ int Human::pick_move(Board* b) {
 
 
 MCTSAgent::MCTSAgent(int depth, double c_param) {
-	this->mcts = new MCTS(c_param);
+	mcts = new MCTS(c_param);
 	this->depth = depth;
 }
 
 int MCTSAgent::pick_move(Board* b) {
 
-	return this->mcts->search(*b, depth);
+	return mcts->search(*b, depth);
 }
 

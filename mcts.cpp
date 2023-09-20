@@ -6,8 +6,8 @@ MCTSNode::MCTSNode(Board board) {
 	this->parent_action = NULL;
 	this->player_to_move = this->board.who_to_play();
 	this->untried_actions = this->board.generate_legal_moves();
-	this->_is_fully_expanded = this->check_if_fully_expanded();
-	this->_is_terminal_state = this->check_if_terminal_state();
+	this->_is_fully_expanded = check_if_fully_expanded();
+	this->_is_terminal_state = check_if_terminal_state();
 
 }
 
@@ -17,8 +17,8 @@ MCTSNode::MCTSNode(Board board, MCTSNode* parent, int parent_action) {
 	this->parent_action = parent_action;
 	this->player_to_move = this->board.who_to_play();
 	this->untried_actions = this->board.generate_legal_moves();
-	this->_is_fully_expanded = this->check_if_fully_expanded();
-	this->_is_terminal_state = this->check_if_terminal_state();
+	this->_is_fully_expanded = check_if_fully_expanded();
+	this->_is_terminal_state = check_if_terminal_state();
 
 
 }
@@ -43,7 +43,7 @@ bool MCTSNode::check_if_fully_expanded() {
 }
 
 bool MCTSNode::check_if_terminal_state() {
-	return this->board.is_terminal_state();
+	return board.is_terminal_state();
 }
 
 
@@ -73,15 +73,15 @@ void MCTSNode::print() {
 	cout << "               Node: " << &*this << endl;
 	cout << "              Board: " << &board << endl;
 	cout << "        Board state: " << endl;
-	this->board.print();
-	cout << "     Player to move: " << this->player_to_move << endl;
-	cout << "             Parent: " << this->parent << endl;
-	cout << "      Parent action: " << this->parent_action << endl;
-	cout << "    Untried actions: " << this->untried_actions.size() << endl;
-	cout << " Is fully expanded?: " << this->_is_fully_expanded << endl;
-	cout << "  Is teminal state?: " << this->_is_terminal_state << endl;
-	cout << "             visits: " << this->visits << endl;
-	cout << "              score: " << this->score << endl;
+	board.print();
+	cout << "     Player to move: " << player_to_move << endl;
+	cout << "             Parent: " << parent << endl;
+	cout << "      Parent action: " << parent_action << endl;
+	cout << "    Untried actions: " << untried_actions.size() << endl;
+	cout << " Is fully expanded?: " << _is_fully_expanded << endl;
+	cout << "  Is teminal state?: " << _is_terminal_state << endl;
+	cout << "             visits: " << visits << endl;
+	cout << "              score: " << score << endl;
 	cout << endl;
 	cout << endl;
 	cout << endl;
@@ -100,8 +100,8 @@ MCTS::MCTS(double c_param) {
 }
 
 int MCTS::search(Board board, int depth) {
-	this->_how_deep = 0;
-	this->all_nodes.clear();
+	_how_deep = 0;
+	all_nodes.clear();
 
 
 	if (board.who_to_play() == -1) {
@@ -118,27 +118,22 @@ int MCTS::search(Board board, int depth) {
 	this->player_to_move = board.who_to_play();
 
 	MCTSNode* root = new MCTSNode(this->board);
-	this->all_nodes.push_back(root);
+	all_nodes.push_back(root);
 
 	double score = 0;
 
 	for (int i = 0; i < this->depth; i++) {
-		MCTSNode* node = this->selection(root);
-		score = this->rollout(node);
-		this->backpropagate(node, score);
+		MCTSNode* node = selection(root);
+		score = rollout(node);
+		backpropagate(node, score);
 
 	}
 
-	//printing parent tree
-	/*
-	cout << "print parent " << endl;
-	this->print_tree(root, 1);
-	*/
-
-	//printing root children with  info
 	
 
-	if (true) { // change in order to see search info
+	if (false) { // change in order to see search info
+
+	// TODO: it is obvliously awful idea to put this code here, but for testing purposes...
 		int aa = 0;
 		for (auto& child : root->children) {
 			cout << " Child: " << aa;
@@ -152,30 +147,11 @@ int MCTS::search(Board board, int depth) {
 	}
 	
 	
-	return this->most_scoring_node(root)->parent_action;
+	return most_scoring_node(root)->parent_action;
 	//return this->most_visited_node(root)->parent_action;
 }
 
 
-void MCTS::print_tree(MCTSNode* node, int r) {
-
-	for (int i = 0;i < r;i++) {
-		cout << "\t";
-	}
-
-	cout << "node: " << node << " parent: " << node->parent <<  endl;
-	cout << endl;
-	r++;
-
-
-
-	if (node->children.size() != 0) {
-		for (auto& child : node->children) {
-			this->print_tree(child, r);
-		}
-	}
-
-}
 
 MCTSNode* MCTS::most_visited_node(MCTSNode* node) {
 
@@ -235,18 +211,18 @@ MCTSNode* MCTS::most_scoring_node(MCTSNode* node) {
 
 
 MCTSNode* MCTS::selection(MCTSNode* node) {
-	this->_how_deep = 1;
+	_how_deep = 1;
 
 	while (node->_is_terminal_state == false) {
 		if (node->_is_fully_expanded == false) {
-			return this->expansion(node);
+			return expansion(node);
 		}
 		else {
-			node = this->ucb1(node);
-			this->_how_deep++;
+			node = ucb1(node);
+			_how_deep++;
 		}
 	}
-	this->_how_deep++; // once more because we just selected another node, counting root as deep=0;
+	_how_deep++; // once more because we just selected another node, counting root as deep=0;
 	return node;
 }
 
@@ -262,7 +238,7 @@ MCTSNode* MCTS::expansion(MCTSNode* node) {
 	node->children.push_back(child_node);
 	node->_is_fully_expanded = node->check_if_fully_expanded();
 
-	this->all_nodes.push_back(child_node);
+	all_nodes.push_back(child_node);
 
 	return child_node;
 }
@@ -286,9 +262,10 @@ double MCTS::rollout(MCTSNode* node) {
 		untried.clear();
 	} 
 
-
-	return (static_cast<double>(((this->player_to_move == rollout_board.outcome() ? 1.f : 5.f)) * 10.f / (1 + moves_count)) * rollout_board.outcome()); // x^-1 function gives higher\lower values for quick wins/loses
-
+	//
+	// x^-1 function gives higher\lower values for quick wins/loses
+	// statement ? 1.f : 5.f  -- loses are worse than missed wins
+	return (static_cast<double>(((player_to_move == rollout_board.outcome() ? 1.f : 5.f)) * 10.f / (1 + moves_count)) * rollout_board.outcome()); 
 }
 
 void MCTS::backpropagate(MCTSNode* node, double score) {
@@ -297,7 +274,7 @@ void MCTS::backpropagate(MCTSNode* node, double score) {
 	node->score += score;
 
 	if (node->parent != nullptr) {
-		this->backpropagate(node->parent, score);
+		backpropagate(node->parent, score);
 	}
 
 }
